@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Works log</h1>
+	{% for job, leader in jobs%}
+		<h2>Action #{{ job.id }}</h2>
+		<table class="table table-dark">
+			<thead>
+				<tr>
+					<th scope="col">Title of activity</th>
+					<th scope="col">Team leader</th>
+					<th scope="col">Duration</th>
+					<th scope="col">List of collaborators</th>
+					<th scope="col">Is finished</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{{ job.job }}</td>
+					<td>{{ leader.surname }} {{ leader.name }}</td>
+					<td>{{ job.work_size }}</td>
+					<td>{{ job.collaborators }}</td>
+					<td>{{ job.is_finished }}</td>
+				</tr>
+			</tbody>
+		</table>
+	{% endfor %}
+{% endblock %}
