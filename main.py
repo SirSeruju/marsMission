@@ -5,7 +5,7 @@ from data.users import User
 from forms.user import RegisterForm
 from forms.login import LoginForm
 from forms.jobs import JobsForm
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -83,7 +83,7 @@ def addJobs():
     if form.validate_on_submit():
         db_sess = create_session()
         jobs = Jobs(
-            team_leader=form.team_leader.data,
+            team_leader=current_user.id,
             job=form.job.data,
             work_size=form.work_size.data,
             collaborators=form.collaborators.data,
@@ -94,8 +94,64 @@ def addJobs():
         db_sess.add(jobs)
         db_sess.commit()
         return redirect('/')
-    return render_template('addJobs.html', title='Add jobs', form=form)
+    return render_template('editJobs.html', title='Add jobs', heading="Add jobs", form=form)
 
+
+@app.route('/editJobs/<int:jobId>', methods=['GET', 'POST'])
+@login_required
+def editJobs(jobId):
+    db_sess = create_session()
+
+    jobs = ()
+    if current_user.id != 1:
+        jobs = db_sess.query(Jobs).filter(Jobs.id == jobId, Jobs.team_leader == current_user.id).all()
+    else:
+        jobs = db_sess.query(Jobs).filter(Jobs.id == jobId).all()
+
+    if len(jobs) == 0:
+        return redirect('/')
+    else:
+        jobs = jobs[0]
+
+    form = JobsForm(
+            job=jobs.job,
+            work_size = jobs.work_size,
+            collaborators = jobs.collaborators,
+            start_date = jobs.start_date,
+            end_date = jobs.end_date,
+            is_finished = jobs.is_finished
+    )
+
+    if form.validate_on_submit():
+        jobs.job = form.job.data
+        jobs.work_size = form.work_size.data
+        jobs.collaborators = form.collaborators.data
+        jobs.start_date = form.start_date.data
+        jobs.end_date = form.end_date.data
+        jobs.is_finished = form.is_finished.data
+        db_sess.commit()
+        return redirect('/')
+    return render_template('editJobs.html', title='Edit jobs', heading="Edit jobs", form=form)
+
+@app.route('/deleteJobs/<int:jobId>', methods=['GET', 'POST'])
+@login_required
+def deleteJobs(jobId):
+    db_sess = create_session()
+
+    jobs = ()
+    if current_user.id != 1:
+        jobs = db_sess.query(Jobs).filter(Jobs.id == jobId, Jobs.team_leader == current_user.id).all()
+    else:
+        jobs = db_sess.query(Jobs).filter(Jobs.id == jobId).all()
+
+    if len(jobs) == 0:
+        return redirect('/')
+    else:
+        jobs = jobs[0]
+    
+    db_sess.delete(jobs)
+    db_sess.commit()
+    return redirect('/')
 
 def main():
 	global_init("db/mars_explorer.db")

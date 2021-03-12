@@ -1,18 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Add jobs</h1>
+<h1>{{ heading }}</h1>
 <form action="" method="post">
 	{{ form.hidden_tag() }}
-	<p>
-		{{ form.team_leader.label }}<br>
-		{{ form.team_leader(class="form-control") }}<br>
-		{% for error in form.team_leader.errors %}
-			<p class="alert alert-danger" role="alert">
-				{{ error }}
-			</p>
-		{% endfor %}
-	</p>
 	<p>
 		{{ form.job.label }}<br>
 		{{ form.job(class="form-control") }}<br>

@@ -11,6 +11,7 @@
 				<th scope="col">Duration</th>
 				<th scope="col">List of collaborators</th>
 				<th scope="col">Is finished</th>
+				<th scope="col"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -22,6 +23,14 @@
 					<td>{{ job.work_size }}</td>
 					<td>{{ job.collaborators }}</td>
 					<td>{{ job.is_finished }}</td>
+					<td>
+						{% if current_user.is_authenticated and leader.id == current_user.id %}
+							<div>
+								<a class="btn btn-warning" href="/editJobs/{{job.id}}">Edit</a>
+								<a class="btn btn-danger" href="/deleteJobs/{{job.id}}">Delete</a>
+							</div>
+						{% endif %}
+					</td>
 				</tr>
 			{% endfor %}
 		</tbody>
