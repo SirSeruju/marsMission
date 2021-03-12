@@ -13,7 +13,18 @@
 	<body>
 		<header>
 			<nav class="navbar navbar-dark bg-dark">
-				<a class="navbar-brand" href="/">Миссия Колонизация Марса</a>
+				<a class="navbar-brand" href="/">Mars colonization mission</a>
+				{% if current_user.is_authenticated %}
+					<div>
+						<a class="navbar-brand">{{ current_user.name }}</a>
+						<a class="btn btn-success" href="/logout">Logout</a>
+					</div>
+				{% else %}
+					<div>
+						<a class="btn btn-primary " href="/register">Sign up</a>
+						<a class="btn btn-success" href="/login">Sign in</a>
+					</div>
+				{% endif %}
 			</nav>
 		</header>
 		<!-- Begin page content -->
