@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, session, make_response
+from flask import Flask, render_template, redirect, session, make_response, jsonify
 from data.db_session import *
 from data.jobs import Jobs
 from data.users import User
