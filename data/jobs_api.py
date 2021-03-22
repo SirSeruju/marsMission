@@ -73,7 +73,7 @@ def create_jobs():
     except Exception as e:
         return jsonify({'error': 'Bad date format. Must be "%Y:%m:%d %h:%m:%s"'})
     try:
-        if "start_date" in request.json:
+        if "end_date" in request.json:
             info["end_date"] = datetime.strptime(
                 request.json["end_date"], '%Y:%m:%d %h:%m:%s')
     except Exception as e:
@@ -85,5 +85,36 @@ def create_jobs():
         db_sess.commit()
     except Exception as e:
         return jsonify({'error': 'Id already exists'})
+
+    return jsonify({'success': 'OK'})
+
+
+@blueprint.route('/api/jobs/<int:jobsId>', methods=['PUT'])
+def edit_jobs(jobsId):
+    if not request.json:
+        return jsonify({'error': 'Empty request'})
+
+    try:
+        if "start_date" in request.json:
+            request["start_date"] = datetime.strptime(
+                request.json["start_date"], '%Y:%m:%d %h:%m:%s')
+    except Exception as e:
+        return jsonify({'error': 'Bad date format. Must be "%Y:%m:%d %h:%m:%s"'})
+    try:
+        if "end_date" in request.json:
+            request["end_date"] = datetime.strptime(
+                request.json["end_date"], '%Y:%m:%d %h:%m:%s')
+    except Exception as e:
+        return jsonify({'error': 'Bad date format. Must be "%Y:%m:%d %h:%m:%s"'})
+
+    db_sess = db_session.create_session()
+    jobs = db_sess.query(Jobs).get(jobsId)
+    try:
+        for key in request.json:
+            if key in dir(jobs):
+                setattr(jobs, key, request.json[key])
+        db_sess.commit()
+    except Exception as e:
+        return jsonify({'error': 'Bad format.'})
 
     return jsonify({'success': 'OK'})
