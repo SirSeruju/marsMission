@@ -33,6 +33,18 @@ def get_one_jobs(jobsId):
     return jsonify({'jobs': jobs.to_dict()})
 
 
+@blueprint.route('/api/jobs/<int:jobsId>', methods=['DELETE'])
+def delete_one_jobs(jobsId):
+    try:
+        db_sess = db_session.create_session()
+        jobs = db_sess.query(Jobs).get(jobsId)
+        db_sess.delete(jobs)
+        db_sess.commit()
+        return jsonify({'success': 'OK'})
+    except Exception as e:
+        return jsonify({'error': 'Not found'})
+
+
 @blueprint.route('/api/jobs', methods=['POST'])
 def create_jobs():
     if not request.json:
