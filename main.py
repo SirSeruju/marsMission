@@ -7,8 +7,15 @@ from forms.user import RegisterForm
 from forms.login import LoginForm
 from forms.jobs import JobsForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_restful import Api
+from data import users_resource
 
 app = Flask(__name__)
+api = Api(app)
+
+api.add_resource(users_resource.UsersResource, '/api/v2/users/<int:user_id>')
+api.add_resource(users_resource.UsersListResource, '/api/v2/users')
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
