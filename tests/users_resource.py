@@ -62,3 +62,10 @@ print("Edit user (need 'Get one user to pass'):",
       "{'user': {'address': 'a1', 'age': 1, 'email': 'e1@e1.e1', 'id': 1, 'modified_date': None, 'name': 'n1', 'position': 'p1', 'speciality': 'sp1', 'surname': 's1'}}"
       else "fail")
 
+os.system("git restore ../db/mars_explorer.db")
+print("Edit user that not exist:",
+      "pass" if
+      str(put("http://127.0.0.1:5000/api/v2/users/11", json={'address': 'a11'}).json()) ==
+      "{'message': 'User 11 not found'}"
+      else "fail")
+
