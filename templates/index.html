@@ -10,6 +10,8 @@
 				<th scope="col">Team leader</th>
 				<th scope="col">Duration</th>
 				<th scope="col">List of collaborators</th>
+				<th scope="col">Start date</th>
+				<th scope="col">End date</th>
 				<th scope="col">Is finished</th>
 				<th scope="col"></th>
 			</tr>
@@ -22,6 +24,8 @@
 					<td>{{ leader.surname }} {{ leader.name }}</td>
 					<td>{{ job.work_size }}</td>
 					<td>{{ job.collaborators }}</td>
+					<td>{{ job.start_date }}</td>
+					<td>{{ job.end_date }}</td>
 					<td>{{ job.is_finished }}</td>
 					<td>
 						{% if current_user.is_authenticated and leader.id == current_user.id %}
