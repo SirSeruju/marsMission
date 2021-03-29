@@ -1,4 +1,4 @@
-from requests import get, post, delete
+from requests import get, post, delete, put
 import os
 
 os.system("git restore ../db/mars_explorer.db")
@@ -51,3 +51,14 @@ print("Add new user with existing email:",
       str(post("http://127.0.0.1:5000/api/v2/users", json={'address': 'a11', 'age': 11, 'email': 'e1@e1.e1', 'name': 'n11', 'position': 'p11', 'speciality': 'sp11', 'surname': 's11', 'hashed_password': 'p11'}).json()) ==
       "{'message': 'Email e1@e1.e1 already exist'}"
       else "fail")
+
+os.system("git restore ../db/mars_explorer.db")
+print("Edit user (need 'Get one user to pass'):",
+      "pass" if
+      str(put("http://127.0.0.1:5000/api/v2/users/1", json={'address': 'a11'}).json()) ==
+      "{'success': 'OK'}"
+      and
+      str(get("http://127.0.0.1:5000/api/v2/users/1").json()) != 
+      "{'user': {'address': 'a1', 'age': 1, 'email': 'e1@e1.e1', 'id': 1, 'modified_date': None, 'name': 'n1', 'position': 'p1', 'speciality': 'sp1', 'surname': 's1'}}"
+      else "fail")
+

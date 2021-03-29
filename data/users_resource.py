@@ -22,6 +22,21 @@ class UsersResource(Resource):
             only=('id', 'surname', 'name', 'age', 'position',
                   'speciality', 'address', 'email', 'modified_date'))})
 
+    def put(self, user_id):
+        abort_if_user_not_found(user_id)
+        args = put_parser.parse_args()
+        session = db_session.create_session()
+        user = session.query(User).get(user_id)
+        for key in args.keys():
+            if key in dir(user) and args[key]:
+                setattr(user, key, args[key])
+        user.modified_date = datetime.datetime.utcnow()
+        try:
+            session.commit()
+        except Exception as e:
+            abort(409, message=f"Something wrong")
+        return jsonify({'success': 'OK'})
+
     def delete(self, user_id):
         abort_if_user_not_found(user_id)
         session = db_session.create_session()
