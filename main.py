@@ -2,19 +2,22 @@ from flask import Flask, render_template, redirect, session, make_response, json
 from data.db_session import *
 from data.jobs import Jobs
 from data.users import User
-from data import jobs_api
 from forms.user import RegisterForm
 from forms.login import LoginForm
 from forms.jobs import JobsForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_restful import Api
 from data import users_resource
+from data import jobs_resource
 
 app = Flask(__name__)
 api = Api(app)
 
 api.add_resource(users_resource.UsersResource, '/api/v2/users/<int:user_id>')
 api.add_resource(users_resource.UsersListResource, '/api/v2/users')
+
+api.add_resource(jobs_resource.JobsResource, '/api/v2/jobs/<int:job_id>')
+api.add_resource(jobs_resource.JobsListResource, '/api/v2/jobs')
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -167,7 +170,6 @@ def not_found(error):
 
 def main():
 	global_init("db/mars_explorer.db")
-	app.register_blueprint(jobs_api.blueprint)
 	app.run()
 
 if __name__ == '__main__':
