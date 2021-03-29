@@ -22,6 +22,21 @@ class JobsResource(Resource):
                     only=('id', 'team_leader', 'job', 'work_size',
                           'collaborators', 'start_date', 'end_date', 'is_finished'))})
 
+    def put(self, job_id):
+        abort_if_job_not_found(job_id)
+        args = put_parser.parse_args()
+        session = db_session.create_session()
+        job = session.query(Jobs).get(job_id)
+        for key in args.keys():
+            if key in dir(job) and args[key]:
+                setattr(job, key, args[key])
+        try:
+            session.commit()
+        except Exception as e:
+            abort(409, message=f"Something wrong.")
+        return jsonify({'success': 'OK'})
+
+
     def delete(self, job_id):
         abort_if_job_not_found(job_id)
         session = db_session.create_session()

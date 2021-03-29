@@ -1,4 +1,4 @@
-from requests import get, post, delete
+from requests import get, post, delete, put
 import os
 
 os.system("git restore ../db/mars_explorer.db")
@@ -46,4 +46,21 @@ print("Add new job:",
       and 
       str(get("http://127.0.0.1:5000/api/v2/jobs/11").json()) ==
       "{'job': {'collaborators': '3, 4', 'end_date': None, 'id': 11, 'is_finished': True, 'job': 'j2', 'start_date': None, 'team_leader': 2, 'work_size': 2}}"
+      else "fail")
+
+os.system("git restore ../db/mars_explorer.db")
+print("Edit job (need Get one job to pass):",
+      "pass" if
+      str(put("http://127.0.0.1:5000/api/v2/jobs/1", json={'job': 'j11'}).json()) ==
+      "{'success': 'OK'}"
+      and
+      str(get("http://127.0.0.1:5000/api/v2/jobs/1").json()) ==
+      "{'job': {'collaborators': '2, 3', 'end_date': None, 'id': 1, 'is_finished': False, 'job': 'j11', 'start_date': None, 'team_leader': 1, 'work_size': 1}}"
+      else "fail")
+
+os.system("git restore ../db/mars_explorer.db")
+print("Edit job that not exist:",
+      "pass" if
+      str(put("http://127.0.0.1:5000/api/v2/jobs/11", json={'job': 'j11'}).json()) ==
+      "{'message': 'Job 11 not found'}"
       else "fail")
